@@ -20,21 +20,21 @@ services:
             - "traefik.enable=true"
 
             # Route HTTP Web
-            - "traefik.http.routers.${PROJECT_NAME}_http.rule=Host(`release.localhost`, `${PROJECT_BASE_URL}`)"
+            - "traefik.http.routers.${PROJECT_NAME}_http.rule=Host(`${PROJECT_BASE_URL}`)"
             - "traefik.http.routers.${PROJECT_NAME}_http.entrypoints=web"
 
             # Route HTTPS Web
-            #- "traefik.http.routers.${PROJECT_NAME}_https.rule=Host(`release.localhost`, `${PROJECT_BASE_URL}`)"
-            #- "traefik.http.routers.${PROJECT_NAME}_https.entrypoints=websecure"
+            - "traefik.http.routers.${PROJECT_NAME}_https.rule=Host(`${PROJECT_BASE_URL}`)"
+            - "traefik.http.routers.${PROJECT_NAME}_https.entrypoints=websecure"
 
             # Redirect HTTP to HTTPS
-            #- "traefik.http.routers.${PROJECT_NAME}_http.middlewares=${PROJECT_NAME}_https_redirect"
-            #- "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.scheme=https"
-            #- "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.permanent=true"
+            - "traefik.http.routers.${PROJECT_NAME}_http.middlewares=${PROJECT_NAME}_https_redirect"
+            - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.scheme=https"
+            - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.permanent=true"
 
             # TLS Certificates
-            #- "traefik.http.routers.${PROJECT_NAME}_https.tls=true"
-            #- "traefik.http.routers.${PROJECT_NAME}_https.tls.certresolver=myresolver"
+            - "traefik.http.routers.${PROJECT_NAME}_https.tls=true"
+            - "traefik.http.routers.${PROJECT_NAME}_https.tls.certresolver=myresolver"
 
 
     php:
@@ -85,5 +85,5 @@ services:
             - "traefik.enable=true"
 
             # Route HTTP Web
-            - "traefik.http.routers.${PROJECT_NAME}_adminer.rule=Host(`adminer.localhost`, `pma.${PROJECT_BASE_URL}`)"
+            - "traefik.http.routers.${PROJECT_NAME}_adminer.rule=Host(`adminer.${PROJECT_BASE_URL}`)"
             - "traefik.http.routers.${PROJECT_NAME}_adminer.entrypoints=web"
