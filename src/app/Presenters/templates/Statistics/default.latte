@@ -1,0 +1,169 @@
+{templateType App\Presenters\StatisticsPresenter}
+
+{block title}
+    Statistics
+{/block}
+
+{block content}
+
+    {default $statistics = array()}
+
+    <h1>Statistics</h1>
+
+    <div class="box">
+        <h2>Overview</h2>
+        <div class="box">
+            <h3>Daily</h3>
+            <table class="table" id="stats_overview_daily">
+
+                <tr>
+                    <td rowspan="3"><b>Today</b></td>
+                    <td><b>Releases</b></td>
+                    <td colspan="3"><b>Tasks</b></td>
+                </tr>
+                <tr>
+                    <td>Created</td>
+                    <td>Imported</td>
+                    <td>Failed</td>
+                    <td>Sum</td>
+                </tr>
+                <tr>
+                    <td>{=count($statistics['release']['create']['today'])}</td>
+                    <td>{=count($statistics['task']['import']['today'])}</td>
+                    <td>{=count($statistics['task']['failed']['today'])}</td>
+                    <td><b>{=count($statistics['task']['sum']['today'])}</b></td>
+                </tr>
+
+                <tr>
+                    <td rowspan="3"><b>Yesterday</b></td>
+                    <td><b>Releases</b></td>
+                    <td colspan="3"><b>Tasks</b></td>
+                </tr>
+                <tr>
+                    <td>Created</td>
+                    <td>Imported</td>
+                    <td>Failed</td>
+                    <td>Sum</td>
+                </tr>
+                <tr>
+                    <td>{=count($statistics['release']['create']['yesterday'])}</td>
+                    <td>{=count($statistics['task']['import']['yesterday'])}</td>
+                    <td>{=count($statistics['task']['failed']['yesterday'])}</td>
+                    <td><b>{=count($statistics['task']['sum']['yesterday'])}</b></td>
+                </tr>
+            </table>
+        </div>
+        <div class="box">
+            <h3>Monthly</h3>
+            <table class="table" id="stats_overview">
+
+                <tr>
+                    <td rowspan="3"><b>This</b></td>
+                    <td><b>Releases</b></td>
+                    <td colspan="3"><b>Tasks</b></td>
+                </tr>
+                <tr>
+                    <td>Created</td>
+                    <td>Imported</td>
+                    <td>Failed</td>
+                    <td>Sum</td>
+                </tr>
+                <tr>
+                    <td>{=count($statistics['release']['create']['this'])}</td>
+                    <td>{=count($statistics['task']['import']['this'])}</td>
+                    <td>{=count($statistics['task']['failed']['this'])}</td>
+                    <td><b>{=count($statistics['task']['sum']['this'])}</b></td>
+                </tr>
+
+                <tr>
+                    <td rowspan="3"><b>Last</b></td>
+                    <td><b>Releases</b></td>
+                    <td colspan="3"><b>Tasks</b></td>
+                </tr>
+                <tr>
+                    <td>Created</td>
+                    <td>Imported</td>
+                    <td>Failed</td>
+                    <td>Sum</td>
+                </tr>
+                <tr>
+                    <td>{=count($statistics['release']['create']['last'])}</td>
+                    <td>{=count($statistics['task']['import']['last'])}</td>
+                    <td>{=count($statistics['task']['failed']['last'])}</td>
+                    <td><b>{=count($statistics['task']['sum']['last'])}</b></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>Github api rate limit</h2>
+        <table>
+            <thead><tr><td>API Rate name</td><td style="text-align: right">Used</td><td>/</td><td>Limit</td><td>Remains</td><td>Reset in</td><td>R/s</td></tr></thead>
+            {include ratelimit, used: true}
+            {include ratelimit, used: false}
+        </table>
+    </div>
+
+    <div class="box">
+        <h2>Tasks in this month</h2>
+        <div class="box"><h3 onclick="$(this).next().toggle(400);">Failed in this month</h3>
+            {include statistics_table, statistics: $statistics['task']['failed']['this']}
+        </div>
+        <div class="box"><h3 onclick="$(this).next().toggle(400);">Imported in this month</h3>
+            {include statistics_table, statistics: $statistics['task']['import']['this']}
+        </div>
+        <h2>Tasks in last month</h2>
+        <div class="box"><h3 onclick="$(this).next().toggle(400);">Failed in last month</h3>
+            {include statistics_table, statistics: $statistics['task']['failed']['last']}
+        </div>
+        <div class="box"><h3 onclick="$(this).next().toggle(400);">Imported in last month</h3>
+            {include statistics_table, statistics: $statistics['task']['import']['last']}
+        </div>
+    </div>
+
+    <div class="box">
+        <h2>All</h2>
+        <div class="box"><h3 onclick="$(this).next().toggle(400);">All in this month</h3>
+            {include statistics_table, statistics: $statistics['all']['this']}
+        </div>
+        <div class="box"><h3 onclick="$(this).next().toggle(400);">All in last month</h3>
+            {include statistics_table, statistics: $statistics['all']['last']}
+        </div>
+    </div>
+{/block}
+
+{block ratelimit}
+    {default $used = true}
+    {foreach $githubRate['resources'] as $type => $row}
+        {continueIf !($used && $row['used'] || !$used && !$row['used'])}
+        <tr style="color: {if $row['used'] == 0}darkgreen{elseif $row['used'] < $row['limit']}darkorange{else}red{/if}">
+            {var $remaining = $row['reset'] - time()}
+            {var $remains = $row['limit']-$row['used']}
+            <td>{$type|firstUpper}</td><td style="text-align: right">{$row['used']}</td><td>/</td><td>{$row['limit']}</td><td style="text-align: right">{$remains|ceil}</td>
+            <td style="text-align: right">{$remaining}s</td><td style="text-align: center">{($remains/$remaining)+1|ceil}</td>
+        </tr>
+    {/foreach}
+{/block}
+
+{block statistics_table}
+    {default $statistics = array()}
+    <table class="table" style="display: none">
+
+        {include table_head, head:['#', 'type', 'Action', 'value', 'date', ]}
+
+        <tbody id="tasks_all">
+        {foreach $statistics as $_row}
+            {var Nette\Database\Row $row = $_row}
+            <tr>
+                <td>{$row->offsetGet('id')}</td>
+                <td>{$row->offsetGet('type')}</td>
+                <td>{$row->offsetGet('action')}</td>
+                <td>{$row->offsetGet('value')}</td>
+                <td>{$row->offsetGet('date')}</td>
+            </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+{/block}

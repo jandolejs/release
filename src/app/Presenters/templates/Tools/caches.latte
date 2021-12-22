@@ -1,0 +1,71 @@
+{templateType App\Presenters\ToolsPresenter}
+
+
+{varType int $pull}
+{varType array $caches}
+{varType array $perFile}
+{varType array $perCache}
+
+{block title}
+    Caches
+{/block}
+
+{block content}
+    {if !empty($pull)}<h1>Pull: <a href="{$pull|githubPullLink}" target="_blank">#{$pull}</a></h1>{/if}
+    <div class="box">
+        <h2>Caches to flush</h2>
+        {foreach $caches as $cache}
+            <label><input type="checkbox"> {$cache}</label><br>
+        {/foreach}
+    </div>
+
+    <div class="box">
+        <h2 onclick="$(this).next().toggle()">Files</h2>
+        <table style="display: none" class="table">
+            {foreach $perFile as $file => $fileCaches}
+                {continueIf empty($fileCaches)}
+                <tr>
+                    <td>{$file}</td>
+                    <td>
+                        {foreach $fileCaches as $cache}
+                            {$cache}<br>
+                        {/foreach}
+                    </td>
+                </tr>
+            {/foreach}
+        </table>
+    </div>
+
+    <div class="box">
+        <h2 onclick="$(this).next().toggle()">Caches</h2>
+        <table style="display: none" class="table">
+            {foreach $perCache as $cache => $cacheFiles}
+                {continueIf empty($cacheFiles)}
+                <tr>
+                    <td>{$cache}</td>
+                    <td>
+                        {foreach $cacheFiles as $file}
+                            {$file}<br>
+                        {/foreach}
+                    </td>
+                </tr>
+            {/foreach}
+        </table>
+    </div>
+
+    <div class="box">
+        <h2 onclick="$(this).next().toggle()">Manual</h2>
+        <table style="display: none" class="table">
+        {var $names = App\Model\Git\Caches::CACHE_NAMES}
+        {var $regexes = App\Model\Git\Caches::CACHE_REGEX}
+            {foreach $names as $key => $name}
+                <tr>
+                    <td>{$name}</td>
+                    <td>
+                        ~{$regexes[$key]}~
+                    </td>
+                </tr>
+            {/foreach}
+        </table>
+    </div>
+{/block}

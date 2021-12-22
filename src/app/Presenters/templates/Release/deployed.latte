@@ -1,0 +1,91 @@
+{varType array $releases}
+{varType int $lastReleaseId}
+
+{block title}
+    Releases - deployed
+{/block}
+
+{block content}
+
+    <div class="box">
+
+        <h2>Deployed</h2>
+
+        <table class="table">
+            <tbody>{foreach $releases ?? [] as $release}
+                <tr>{include release_row, release: $release}</tr>
+            {/foreach}</tbody>
+        </table>
+    </div>
+{/block}
+
+{block release_row}
+
+    {varType App\Model\Release $release}
+
+    <tr><td>
+        <div class="btn-group">
+            <a class="btn btn-primary" n:href="Release:show $release->getId()">Release: {$release->getId()}</a>
+            <a class="btn btn-primary" href="{$release->getPullLink()}" target="_blank">#{$release->getPull()}</a>
+        </div>
+
+        {var $mergedAt = $release->getDeployedAt()}
+        </td><td data-toggle="tooltip" data-placement="top"
+                 {if !$release->getMergedAt()}title="Not confirmed by GitHub yet" style="color: darkorange"
+                {else}title="Confirmed by GitHub" style="color: darkgreen"{/if}
+            >{if $release->getMergedAt()}Merged at:{else}Deployed at:{/if} <b>{$mergedAt|date: 'Y-m-d'}</b> {$mergedAt|date: 'H:i'}
+    </td></tr>
+
+    <tr><td>
+        <table class="table">
+            {foreach $release->getTasks() as $_task}
+                {var App\Model\Task $task = $_task}
+
+                <tr>
+                    <td>{if isset($iterator)}{$iterator->counter}.{else}-{/if}</td>
+
+                    <!-- Status -->
+                    <td>
+                        {switch $task->getStatus()}
+                            {case App\Model\Task::STATUS_NEW}
+                            <span class="badge badge-pill release-status" style="background-color: lightgreen; color: #651f1f;">New</span>
+                        {case App\Model\Task::STATUS_FAILED}
+                            <span class="badge badge-pill release-status" style="background-color: orange; ">Failed</span>
+                        {case App\Model\Task::STATUS_TESTING}
+                            <span class="badge badge-pill release-status" style="background-color: blue; ">Testing</span>
+                        {case App\Model\Task::STATUS_READY}
+                            <span class="badge badge-pill release-status" style="background-color: green;  ">Ready</span>
+                        {default}
+                            Unknown
+                        {/switch}
+                    </td>
+
+                    <!-- Pull -->
+                    <td><a target="_blank" href="{$task->getPullLink()}">#{$task->getPull()}</a></td>
+
+                    <!-- Jira -->
+                    <td><a target="_blank" href="{$task->getIssueLink()}">{$task->getPZ(true)}</a></td>
+
+                    <!-- Author -->
+                    <td>{$task->getCreator()|niceGitName|firstUpper}</td>
+
+                    <!-- Name -->
+                    <td>{$task->getName()|firstUpper|truncate: 70}</td>
+
+                    <!-- Labels -->
+                    <td>
+                        {foreach $task->getLabels() as $label}
+                            {continueIf  $label['name'] === App\Configuration::get('pull/label/ready')}
+                            <span class="badge badge-pill" style="padding: 6px; background-color: #{$label['color']}"
+                                  {if isset($label['description'])}data-toggle="tooltip" data-placement="top" title="{$label['description']}"{/if}
+                            >{$label['name']}</span>
+                        {/foreach}
+                    </td>
+
+                    <!-- Note -->
+                    <td>{$task->getNote()}</td>
+                </tr>
+            {/foreach}
+        </table>
+    </td></tr>
+{/block}

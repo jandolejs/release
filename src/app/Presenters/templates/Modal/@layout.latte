@@ -1,0 +1,49 @@
+{var $id = $id ?? "no_id_setted_" . str_shuffle("modalnoid")}
+{default $show = FALSE}
+{default $width = 50}
+{default $title = "Title"}
+{default $closeText = "Close"}
+{default $showCloseButton = TRUE}
+
+{block javascript}
+    <script n:if="$show" type="text/javascript">
+        $(window).on('load', function () {
+            $({="#$id"}).modal('show');
+        });
+    </script>
+{/block}
+
+{block body}
+    <div class="modal" tabindex="-1" id="{$id}">
+        <div class="modal-dialog" style="min-width: {$width}%;">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4>{$title}</h4>
+                    {block modal_header}{/block}
+                </div>
+
+                <div class="modal-body">
+                    {block modal_body}{/block}
+                </div>
+
+                <div class="modal-footer">
+                    {block modal_footer}{/block}
+                    <button n:if="!$showCloseButton" type="button" class="btn btn-secondary" data-dismiss="modal">{$closeText}</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{/block}
+
+{define table_head}
+
+    {default array $head = []}
+
+    <thead><tr>
+        {foreach $head as $item}
+            <th scope="col">{$item|firstUpper}</th>
+        {/foreach}
+    </tr></thead>
+{/define}

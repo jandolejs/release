@@ -1,0 +1,27 @@
+{templateType App\Presenters\ToolsPresenter}
+
+{block title}
+    Tools
+{/block}
+
+{block content}
+    <div class="box">
+        {include pullRequestCaches}
+    </div>
+{/block}
+
+{block pullRequestCaches}
+    <!--suppress HtmlUnknownTarget -->
+    <form class="input-group mb-3" action="/tools/caches" method="GET">
+
+        <div class="input-group-prepend">
+            <span class="input-group-text">Show Caches for Pull request ID:</span>
+        </div>
+
+        <input name="pull" type="text" class="form-control" placeholder="Pull title or link or number">
+
+        <div class="input-group-append">
+            <button type="submit" class="btn-sm btn-primary">Show</button>
+        </div>
+    </form>
+{/block}

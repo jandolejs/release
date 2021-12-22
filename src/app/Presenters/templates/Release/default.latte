@@ -1,0 +1,69 @@
+{varType array $releases}
+{varType int $lastReleaseId}
+
+{block title}
+    Release - overview
+{/block}
+
+{block content}
+
+    <div class="d-flex justify-content-center">
+        <a class="btn btn-success" n:href="Release:new" >Create new</a>
+    </div>
+
+    <div class="box">
+
+        <h2>Open</h2>
+
+        <table class="table">
+            <tbody>{foreach $releases['opened'] ?? [] as $release}
+                <tr>{include release_row, release: $release}</tr>
+            {/foreach}</tbody>
+        </table>
+    </div>
+
+    <div class="box">
+
+        <h2>Last 10</h2>
+
+        <table class="table">
+            <tbody>{foreach $releases['all'] ?? [] as $release}
+                <tr>{include release_row, release: $release}</tr>
+            {/foreach}</tbody>
+        </table>
+    </div>
+
+{/block}
+
+{block release_row}
+
+    {varType App\Model\Release $release}
+
+    <td class="col-1">
+        {var $class = $release->getId() == $lastReleaseId ? 'btn-info':'btn-primary'}
+        <a class="btn btn-sm {$class}" n:href="Release:show $release->getId()">Release: {$release->getId()}</a>
+    </td>
+
+    <td class="col-1">
+        {if $release->getPull()}
+            <a class="btn btn-sm btn-success" style="width: 100px"
+               href="{$release->getPullLink()}" target="_blank"
+               data-toggle="tooltip" data-placement="top" title="Pull request #{$release->getPull()}"
+            >{$release->getStatus(true)}</a>
+        {else}
+            <div class="btn btn-sm btn-outline-primary disabled" style="width: 100px">{$release->getStatus(true)}</div>
+        {/if}
+    </td>
+
+    <td></td>
+
+    <td>
+        <div class="btn btn-sm btn-outline-primary">
+            Tasks: {$release->hasTasks()}
+                            {foreach $release->getTasks() as $_task}
+                {var App\Model\Task $task = $_task}
+                <a class="badge bg-info" href="{$task->getPullLink()}" target="_blank">#{$task->getPull()}</a>
+            {/foreach}
+        </div>
+    </td>
+{/block}

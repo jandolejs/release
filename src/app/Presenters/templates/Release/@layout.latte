@@ -1,0 +1,52 @@
+{layout ../@layout.latte}
+
+{block releaseStatus}
+    {varType App\Model\Release $release}
+
+    <!-- Release status -->
+    <button class="btn btn-lg btn-dark" title="Release status"
+            data-toggle="tooltip" data-placement="top"
+    >{$release->getStatus(true)}</button>
+
+    <!-- Ready for deploy create pull request button -->
+    {if $release->getStatus() === App\Model\Release::STATUS_READY}
+        <a class="btn btn-lg btn-success" title="Create PR"
+           data-toggle="tooltip" data-placement="top"
+           href="{link "Release:createPull", $release->getId()}"
+           onclick="reloading(true)"
+        >Create Pull</a>
+    {/if}
+
+    <!-- If PR is there show PR button, or Show SHA if exists -->
+    {if !empty($release->getBranch())}
+        <a class="btn btn-lg btn-dark"
+           href="{$release->getDiffLink()}" target="_blank"
+           data-toggle="tooltip" data-placement="top" data-html="true" title="{="Branch: "}{$release->getBranch() ?? 'none'}"
+        >{$release->getSha() ?? '-'|truncate: 7,''}</a>
+    {/if}
+
+    <!-- Deployed, show PR button -->
+    {if $release->getStatus() === App\Model\Release::STATUS_DEPLOYED}
+        <a class="btn btn-lg btn-success" title="Show Pull request detail"
+           data-toggle="tooltip" data-placement="top" target="_blank"
+           href="{$release->getPullLink()}"
+        >Pull request</a>
+    {/if}
+
+    <!-- Release has status failed, so it can be failed -->
+    {if !$release->getMergedAt() && in_array($release->getStatus(), [App\Model\Release::STATUS_READY, App\Model\Release::STATUS_TESTING, App\Model\Release::STATUS_FAILING, App\Model\Release::STATUS_NEW, App\Model\Release::STATUS_DEPLOYED])}
+        <a class="btn btn-lg btn-warning" title="Completely fail release"
+           data-toggle="tooltip" data-placement="top"
+           href="{link "Release:fail", $release->getId()}"
+           onclick="return confirm('Really?')"
+        >Fail release</a>
+    {/if}
+
+    {var $warnings = $release->getWarnings()}
+    {if !empty($warnings)}
+        <button class="btn btn-lg btn-warning" title="Warnings: {foreach $warnings as $w}{$w}{if !$iterator->last}, {/if}{/foreach}"
+           data-toggle="tooltip" data-placement="top"
+        >!</button>
+    {/if}
+
+{/block}

@@ -1,0 +1,23 @@
+
+.box {
+    border: 1px solid black; border-radius: 7px; max-width: 95%;margin: 20px auto; padding: 10px;
+}
+
+#button_reload_pulls_modal {
+    width: 150px;
+}
+#stats_overview td {
+    padding: 5px; text-align:center; vertical-align: middle;
+}
+#stats_overview_daily td {
+    padding: 5px; text-align:center; vertical-align: middle;
+}
+
+.release-status {
+    padding: 6px;
+    width: 100px;
+}
+
+h1 {
+    padding-left: 20px;
+}

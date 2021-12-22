@@ -1,0 +1,131 @@
+{varType \app\Model\Release $release}
+
+{block title}
+    Release - detail
+{/block}
+
+{block content}
+
+    <div class="box">
+        {include releaseHeader}
+    </div>
+
+    {if $release->hasTasks()}
+        <div class="box">
+            <h2 onclick="$(this).next().toggle(400);">Tasks inside release</h2>
+            {include tasksTable}
+        </div>
+    {/if}
+
+    <div class="box">
+        <h3 onclick="$(this).next().toggle(400);">Caches to be flushed <a n:href="Tools:caches, release: $release->getId()">↗️</a></h3>
+        <div style="display: none">{foreach $release->getCaches() as $key => $cache}
+            {var $color = in_array($key, App\Model\Git\Caches::CACHE_DANGEROUS) ? "red" : "lightseagreen"}
+            <span class="badge badge-danger" style="background-color: {$color}">{$cache}</span>
+        {/foreach}</div>
+    </div>
+
+    <div class="box">
+        <h3 onclick="$(this).next().toggle(400);">Changed files</h3>
+        <div style="display: none">{foreach $release->getFilenames() as $filename}
+            {$filename}<br>
+        {/foreach}</div>
+    </div>
+
+    <div id="modal_pull_requests"></div>
+
+{/block}
+
+{define releaseHeader}
+    {varType App\Model\Release $release}
+
+    <!-- Go back button -->
+    <a n:href="Release: lastReleaseId: $release->getId()" class="btn btn-lg btn-dark">↫</a>
+
+    <button class="btn btn-lg btn-dark"
+            data-toggle="tooltip" data-placement="top" title="Release number"
+    >{(($release->getId() % 100 == 0) ? "🎉")}release/<b>{$release->getId()}</b></button>
+
+    {include releaseStatus}
+{/define}
+
+{define tasksTable}
+    <table class="table">
+
+        <thead><tr><th n:foreach="['#', 'Status', 'Actions', 'Pull', 'Jira', 'Author', 'Name', 'Labels', 'Note'] as $item"
+                    scope="col">{$item|firstUpper}</th></tr></thead>
+
+        <tbody id="tasks_all">
+        {foreach $release->getTasks() as $task}
+            {include taskBody, task: $task, iterator: $iterator}
+        {/foreach}
+        </tbody>
+    </table>
+{/define}
+
+
+{define taskBody}
+    {varType App\Model\Task $task}
+
+    <tr>
+        <td>{if isset($iterator)}{$iterator->counter}.{else}-{/if}</td>
+
+        <!-- Status -->
+        <td>
+            {switch $task->getStatus()}
+                {case App\Model\Task::STATUS_NEW}
+                <span class="badge badge-pill release-status" style="background-color: lightgreen; color: #651f1f;">New</span>
+            {case App\Model\Task::STATUS_FAILED}
+                <span class="badge badge-pill release-status" style="background-color: orange; ">Failed</span>
+            {case App\Model\Task::STATUS_TESTING}
+                <span class="badge badge-pill release-status" style="background-color: blue; ">Testing</span>
+            {case App\Model\Task::STATUS_READY}
+                <span class="badge badge-pill release-status" style="background-color: green;  ">Ready</span>
+                {default}
+                Unknown
+            {/switch}
+        </td>
+
+        <!-- Actions -->
+        {if isset($release)}
+            {varType App\Model\Release $release}
+
+            <td>{if in_array($release->getStatus(), [App\Model\Release::STATUS_TESTING, App\Model\Release::STATUS_FAILING, App\Model\Release::STATUS_READY])}(
+                <a style=" text-decoration: none; cursor: pointer; color: orange; "
+                   data-toggle="tooltip" data-placement="top" title="Failed" n:href="Task:failed $task->getId()"
+                >✗</a>
+                |
+                <a style=" text-decoration: none; cursor: pointer; color: forestgreen; "
+                   data-toggle="tooltip" data-placement="top" title="Ready" n:href="Task:approve $task->getId()"
+                >✓</a>
+            ){/if}</td>
+        {/if}
+
+        <!-- Pull -->
+        <td><a target="_blank" href="{$task->getPullLink()}">#{$task->getPull()}</a></td>
+
+        <!-- Jira -->
+        <td><a target="_blank" href="{$task->getIssueLink()}">{$task->getPZ(true)}</a></td>
+
+        <!-- Author -->
+        <td>{$task->getCreator()|niceGitName|firstUpper}</td>
+
+        <!-- Name -->
+        <td>{$task->getName()|firstUpper|truncate: 70}</td>
+
+        <!-- Labels -->
+        <td>
+            {if !$task->hasApprove()}<span class="badge badge-pill" style="padding: 6px; background-color: red" data-toggle="tooltip" data-placement="top" title="This PR does not have approve">! NOT APPROVED</span>{/if}
+
+            <span n:foreach="$task->getLabels() as $label" class="badge badge-pill" style="padding: 6px; background-color: #{$label['color']}"
+                  {if isset($label['description'])}data-toggle="tooltip" data-placement="top" title="{$label['description']}"{/if}
+            >{continueIf $label['name'] == App\Configuration::get('pull/label/ready')}{$label['name']}</span>
+        </td>
+
+        <!-- Note -->
+        <td>
+            <label><input onchange="updateNote({link Task:updateNote, id: $task->getId()}, this)"
+                          value="{$task->getNote()}" class="form-control"></label>
+        </td>
+    </tr>
+{/define}

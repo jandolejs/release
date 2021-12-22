@@ -1,0 +1,17 @@
+
+parameters:
+
+    jira_prefix: ABC
+    jira_company_name: company_name
+
+    github_token: ghp_abc123
+    github_company: githubcompany
+    github_repository: repository
+
+    google_client_id: 11111111111-1a2b3c.apps.googleusercontent.com
+    google_secret_key: Abcdefg123
+
+database:
+    dsn: 'mysql:host=mysql;dbname=here_database_name'
+    user: here_database_user
+    password: here_database_password

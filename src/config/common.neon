@@ -1,0 +1,106 @@
+
+parameters:
+
+    # from local.neon, edit there, not here, sample is in local.sample.neon
+    jira_prefix:
+    github_token:
+    github_company:
+    github_repository:
+    google_client_id:
+    google_secret_key:
+    jira_company_name:
+
+    # Jira - links, etc, ...
+    jira_url: https://%jira_company_name%.atlassian.net
+
+    configuration:
+
+        jira:
+            url: %jira_url%
+            prefix: %jira_prefix%
+            issue_url: %jira_url%/browse
+
+        pull:
+            label: # Github labels texts
+                ready: "tested and ready"
+                waits: "waits to tester"
+                manual: "release manual action required"
+                prevent: "do not merge"
+
+        github:
+            master: master
+            url: https://github.com
+            api: https://api.github.com
+            company: %github_company%
+            repository: %github_repository%
+
+        release:
+            pull:
+                name: "Release %d -%s" # %d - number of release / %s - tasks inside
+            branch:
+                prefix: release
+            table: releases
+
+        task:
+            prefix: %jira_prefix%
+            table: tasks
+
+        statistics:
+            table: statistics
+
+        users:
+            table: users
+
+
+application:
+    #catchExceptions: true
+    errorPresenter: Error
+    mapping:
+        *: App\*Module\Presenters\*Presenter
+
+
+session:
+    expiration: 14 days
+    debugger: true
+
+
+di:
+    export:
+        parameters: no
+        tags: no
+
+
+services:
+
+    Configuration:
+        factory: App\Configuration
+        setup:
+            - App\Configuration::$config = %configuration%
+
+    Authenticator: App\MyAuthenticator
+    Authorizer: App\MyAuthorizer
+
+    RouterFactory: App\Router\RouterFactory::createRouter
+
+    ReleaseFactory:
+        factory: App\ReleaseFactory(@Nette\Database\Explorer, @Nette\Security\User)
+        setup:
+            - App\ReleaseFactory::$gitHub = @GitHub
+            - App\Model\Release::$taskFactory = @TaskFactory
+            - App\Model\Release::$pullFactory = @PullFactory
+            - App\Model\Release::$gitHub = @GitHub
+
+    TaskFactory:
+        factory: App\TaskFactory(@Nette\Database\Explorer, @GitHub)
+        setup:
+            - App\Model\Task::$gitHub = @GitHub
+
+    Statistics: App\Model\Statistics(@Nette\Database\Explorer, @Nette\Security\User)
+
+    GitHub:
+        factory: App\Model\Git\GitHub(%github_token%)
+        setup:
+            - App\Model\Git\GitHub::$company = %github_company%
+            - App\Model\Git\GitHub::$repository = %github_repository%
+
+    PullFactory: App\PullFactory

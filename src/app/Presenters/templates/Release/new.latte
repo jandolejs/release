@@ -1,0 +1,73 @@
+
+{block title}
+    Release - new
+{/block}
+
+{block content}
+    <h1>Include pull requests to new release</h1>
+
+    <div class="box">
+        <div class="btn-group">
+            <label for="manual_add_pull"></label>
+            <input type="text" class="form-control" id="manual_add_pull" placeholder="Pull #">
+            <button class="btn btn-primary" onclick="importToRelease($('#manual_add_pull').val());">
+                Manual&nbsp;add
+            </button><!-- >Manual add< -->
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-success" onclick="importAllToRelease()">Add&nbsp;all</button><!-- >Add all< -->
+            <button class="btn btn-success" onclick="importReadyToRelease()">Add&nbsp;ready</button><!-- >Add ready< -->
+        </div>
+
+        <button class="btn btn-success" id="button_prepare_release"
+                data-toggle="tooltip" data-placement="top" title="Merge tasks and prepare release for testing"
+                onclick="$('#new_release_modal').modal('hide'); prepareRelease({link "Release:create"});"
+        >Create release</button>
+
+        <button class="btn btn-warning" id="button_prepare_release"
+                data-toggle="tooltip" data-placement="top" title="Force creating release (approve not required)"
+                onclick="$('#new_release_modal').modal('hide'); prepareRelease({link "Release:create"}, true);"
+        >!</button>
+
+        <br><br>
+        <table class="table">
+            <thead><tr><th n:foreach="['#', 'Author', 'PR', 'PZ', 'Name', 'Labels', 'Actions'] as $item" scope="col">{$item|firstUpper}</th></tr></thead>
+            <tbody id="pulls_list">
+
+            {varType array $pulls}
+            {foreach $pulls as $pull}
+                <tr>
+
+                    {var $pullNo = $pull->number}
+                    {var $isReady = $pull->is_ready}
+                    {var App\Model\Task\Title $pullTitle = $pull->custom_title}
+                    {var $pz = $pullTitle->getCode(true)}
+
+                    <th scope="row">{$iterator->counter}.</th>
+                    <td>{$pull->user->login|niceGitName|firstUpper}</td>
+                    <td><a target="_blank" href="{$pull->html_url}">#{$pullNo}</a></td>
+                    <td><a target="_blank" href="{App\Configuration::get('jira/url') . "/browse/$pz"}">{$pz}</a></td>
+                    <td>{$pullTitle->getName()|firstUpper|truncate: 70}</td>
+                    <td>
+                        <span n:foreach="$pull->labels as $label" class="badge" style="padding: 6px; background-color: #{$label->color}" title="{$label->description}" data-toggle="tooltip" data-placement="top">{$label->name}</span>
+                    </td>
+                    <td>
+                        <label class="btn btn-secondary" {if $isReady === null}title="Blocked - Something is wrong with this PR" data-toggle="tooltip" data-placement="top"{/if}>
+                            <input id="import_button_{$pullNo}" type="checkbox" autocomplete="off" value="{$pullNo}" {if $isReady === null}disabled{/if}
+                                   class="{if $isReady === true}ready{/if} {if $isReady !== null}to_test{/if}" {if $isReady === true}checked{/if}>
+                            Add&nbsp;to&nbsp;release<!-- Add to release -->
+                        </label>
+                    </td>
+                </tr>
+            {else}
+                <tr>
+                    <td colspan="7">Nothing here</td>
+                </tr>
+            {/foreach}
+
+            </tbody>
+        </table>
+    </div>
+
+{/block}
