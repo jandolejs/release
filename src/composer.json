@@ -1,4 +1,10 @@
 {
+    "config": {
+      "platform": {
+        "php": "8.0.0",
+        "ext-something": "8.0.0"
+      }
+    },
 	"name": "nette/web-project",
 	"description": "Nette: Standard Web Project",
 	"keywords": ["nette"],
