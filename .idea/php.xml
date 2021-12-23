@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/src/vendor/nette/forms" />
+      <path value="$PROJECT_DIR$/src/vendor/composer" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/finder" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/database" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/di" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/mail" />
+      <path value="$PROJECT_DIR$/src/vendor/latte/latte" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/component-model" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/neon" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/caching" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/bootstrap" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/security" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/schema" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/tester" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/php-generator" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/application" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/utils" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/robot-loader" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/http" />
+      <path value="$PROJECT_DIR$/src/vendor/nette/routing" />
+      <path value="$PROJECT_DIR$/src/vendor/tracy/tracy" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/thanks" />
+      <path value="$PROJECT_DIR$/src/vendor/php-http/httplug" />
+      <path value="$PROJECT_DIR$/src/vendor/php-http/cache-plugin" />
+      <path value="$PROJECT_DIR$/src/vendor/php-http/message" />
+      <path value="$PROJECT_DIR$/src/vendor/php-http/promise" />
+      <path value="$PROJECT_DIR$/src/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/src/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/src/vendor/php-http/client-common" />
+      <path value="$PROJECT_DIR$/src/vendor/clue/stream-filter" />
+      <path value="$PROJECT_DIR$/src/vendor/php-http/multipart-stream-builder" />
+      <path value="$PROJECT_DIR$/src/vendor/nyholm/psr7" />
+      <path value="$PROJECT_DIR$/src/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/src/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/src/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/src/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/src/vendor/knplabs/github-api" />
+      <path value="$PROJECT_DIR$/src/vendor/kriswallsmith/buzz" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/src/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/src/vendor/marufmax/emoticon-php" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />
+</project>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MagicentoSettings">
+    <option name="pathToMage" value="$PROJECT_DIR$/app/Mage.php" />
+    <option name="enabled" value="false" />
+    <option name="pathToPhp" value="" />
+    <option name="urlToMagento" value="" />
+    <option name="packages" value="" />
+    <option name="themes" value="" />
+    <option name="basicAuthUsername" value="" />
+    <option name="basicAuthPassword" value="" />
+    <option name="pathsToMagentoSerialized" value="" />
+    <option name="lineMarkerLayoutHandle" value="false" />
+    <option name="customSignatures" value="Mage_Sales_Model_Order.getPaymentsCollection = Mage_Sales_Model_Resource_Order_Payment_Collection;;MODEL=sales/order.getPaymentsCollection==RESOURCEMODEL=sales/order_payment_collection" />
+    <option name="d" value="OmxtZl+XqW/Wm2zJECKMmR6oPlY1ciLB+jQx7Z1g0gV6sOKSencKXVUAo0aoBCuTlyi4SSPnWUij&#13;&#10;a+tpw6DlR8bFS7zEJf/UoD7WSTEl52vwF4zDSpk0BtDazXWx8vS0aSs46uhG3ckA8DNA1/aRWccE&#13;&#10;u6ojzZanqYWZueiMQ4w=&#13;&#10;" />
+  </component>
+</project>
