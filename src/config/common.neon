@@ -52,6 +52,9 @@ parameters:
             table: users
 
 
+http:
+    proxy: 172.0.0.0/8
+
 application:
     #catchExceptions: true
     errorPresenter: Error
