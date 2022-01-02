@@ -102,7 +102,6 @@ class TaskPresenter extends Presenter
      */
     #[NoReturn] public function beforeRender(): void
     {
-        $this->error("Task has no actions");
         $this->redirect("Homepage:");
     }
 }

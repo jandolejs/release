@@ -18,7 +18,7 @@ class LoginPresenter extends Presenter
 {
 
     /**
-     * @throws \Nette\Application\BadRequestException|\Nette\Application\AbortException
+     * @throws \Nette\Application\AbortException
      * @noinspection PhpUnused
      */
     public function actionUsername()
@@ -35,7 +35,7 @@ class LoginPresenter extends Presenter
         } catch (Exception $e) {
             $this->statistics->create("user", 'login_fail', $username);
 
-            $this->error($e->getMessage(), Nette\Http\IResponse::S401_UNAUTHORIZED);
+            $this->sendErrorText($e->getMessage());
         }
 
         $this->terminate();

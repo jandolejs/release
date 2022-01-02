@@ -53,6 +53,17 @@ class Presenter extends Nette\Application\UI\Presenter
         }
     }
 
+    /**
+     * @param string $text
+     * @throws \Nette\Application\AbortException
+     */
+    public function sendErrorText(string $text)
+    {
+        $this->getHttpResponse()->setContentType('text/plain', 'UTF-8');
+        $this->getHttpResponse()->setCode(Nette\Http\IResponse::S401_UNAUTHORIZED);
+        $this->sendResponse(new Nette\Application\Responses\TextResponse($text));
+    }
+
 
     public function beforeRender()
     {
