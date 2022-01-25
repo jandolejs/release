@@ -1,0 +1,35 @@
+{templateType App\Presenters\ToolsPresenter}
+
+{default $pulls = array()}
+
+{block title}
+    PullChecker
+{/block}
+
+{block content}
+
+    <div class="box">
+        <h2>Descriptions</h2>
+        {include descriptions}
+    </div>
+
+    <div class="box">
+        <h2>All pulls</h2>
+        {include allPulls}
+    </div>
+
+{/block}
+
+{define descriptions}
+
+
+
+{/define}
+
+{define allPulls}
+    <table class="table">
+        {foreach $pulls as $number => $data}
+            <tr><td>{$number}</td><td>{$data['std']->title}</td></tr>
+        {/foreach}
+    </table>
+{/define}

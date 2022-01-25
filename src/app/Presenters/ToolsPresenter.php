@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Presenters;
 
 use App\Model\Git\Caches;
+use App\Model\Git\GitHub;
 use App\Presenter;
 use App\PullFactory;
 use App\ReleaseFactory;
 use Nette\DI\Attributes\Inject;
+use Nette\Utils\DateTime;
 
 /**
  * @package App\Presenters
@@ -81,5 +83,39 @@ class ToolsPresenter extends Presenter
         $this->template->perFile = $perFile;
         $this->template->perCache = $perCache;
         $this->template->pull = $pull ?? 0;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function actionTi()
+    {
+
+        $week = date('w');
+        $from = date('Y-m-d', strtotime('-' . $week . ' days'));
+        $to = date('Y-m-d', strtotime('+' . (6 - $week) . ' days'));
+        $pullList = $this->gitHub->getPullArray(GitHub::PULL_STATE_CLOSED, $from, $to);
+        $errors = array();
+        $pulls = array();
+
+        foreach ($pullList as $number => $pull) {
+            if (str_starts_with($pull->title, "Release ")) continue; // skip releases
+            $body = $pull->body;
+            $pulls[$number]['std'] = $pull; // add to all pulls
+            $pulls[$number]['text'] = $body;
+
+
+            if (!strpos($body, "## Test instructions")) {
+                $errors[] = "No test instructions defined";
+            }
+
+            preg_match("~(?<=## Test instructions[[:cntrl:]])(<!--.+-->)?.+?(?:(?=[[:cntrl:]]##)|$)~s", $body, $matches);
+            bdump($matches[0], (string)$number);
+
+
+            $pulls[$number]['errors'] = $errors;
+        }
+
+        $this->template->pulls = $pulls;
     }
 }

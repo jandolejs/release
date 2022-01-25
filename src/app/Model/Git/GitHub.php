@@ -11,6 +11,7 @@ use App\Exceptions\GitHubException;
 use App\Model\Task;
 use Exception;
 use Github\Client;
+use Nette\Http\Url;
 use stdClass;
 
 class GitHub
@@ -21,6 +22,10 @@ class GitHub
     private static string $token;
     public static string $company;
     public static string $repository;
+
+    const PULL_STATE_ALL = 'all';
+    const PULL_STATE_OPEN = 'open';
+    const PULL_STATE_CLOSED = 'closed';
 
     public function __construct(string $token) {
         self::$token = $token;
@@ -111,6 +116,10 @@ class GitHub
             }
             $path = Configuration::get('github/api') . "$path";
             $path = str_replace("+", "%20", $path);
+        }
+
+        if ($type === 'GET' && !empty($data) && !strpos($path, "/?")) {
+            $path = $path . "?" . http_build_query($data);
         }
 
         $ch = curl_init();
@@ -287,6 +296,43 @@ class GitHub
     public function getApiRate(): array
     {
         return json_decode(json_encode($this->call('/rate_limit')), true);
+    }
+
+    /**
+     * Get pull requests by date from/to
+     * @throws \Exception
+     * @var bool $refetch Fetch new data, instead of using last fetched ones
+     */
+    public function getPullArray($state, $from, $to): array
+    {
+        if (empty($_SESSION['github']['ti']))
+        {
+            $pulls = array();
+            $all = false;
+            $perPage = 20;
+            $tries = 1;
+
+            while (!$all && $tries++ <= 5) {
+
+                $review  = "review:approved";
+                $status  = "is:" . $state;
+                $repo    = "repo:" . self::$company . "/" . Configuration::get('github/repository');
+                $q       = "merged:$from..$to";
+                $q       = $q . "+" . $status . "+" . $review . "+" . $repo;
+
+                $fetched = $this->call("/search/issues?q=$q&sort:updated-desc");
+                $fetched = $fetched->items;
+
+                foreach ($fetched as $pull) {
+                    $pulls[$pull->number] = $pull;
+                }
+                $all = sizeof($fetched) < $perPage;
+            }
+
+            $_SESSION['github']['ti'] = $pulls;
+        }
+
+        return $_SESSION['github']['ti'];
     }
 
 }
