@@ -52,10 +52,10 @@ services:
         volumes:
             - ./src:/var/www/html:cached
         depends_on:
-            - mariadb
+            - mariadb_release
             - composer
 
-    mariadb:
+    mariadb_release:
         image: wodby/mariadb:$MARIADB_TAG
         container_name: "${PROJECT_NAME}_mariadb"
         stop_grace_period: 30s
@@ -74,16 +74,3 @@ services:
         command: install
         volumes:
             - ./src:/app
-
-    adminer:
-        image: adminer
-        container_name: "${PROJECT_NAME}_adminer"
-        environment:
-            ADMINER_DEFAULT_SERVER: $DB_HOST
-        labels:
-            # Enable traefik for this container
-            - "traefik.enable=true"
-
-            # Route HTTP Web
-            - "traefik.http.routers.${PROJECT_NAME}_adminer.rule=Host(`adminer.${PROJECT_BASE_URL}`)"
-            - "traefik.http.routers.${PROJECT_NAME}_adminer.entrypoints=web"
