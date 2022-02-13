@@ -14,7 +14,9 @@ services:
             NGINX_VHOST_PRESET: php
             NGINX_SERVER_ROOT: /var/www/html/www
         volumes:
-            - ./src/:/var/www/html:cached
+            - ./src/:/var/www/html
+        networks:
+            - web
         labels:
             # Enable traefik for this container
             - "traefik.enable=true"
@@ -42,31 +44,15 @@ services:
         container_name: "${PROJECT_NAME}_php"
         environment:
             PHP_FPM_CLEAR_ENV: 'no'
-            PHP_SENDMAIL_PATH: /usr/sbin/sendmail -t -i -S mailhog:1025
-            DB_HOST: $DB_HOST
-            DB_USER: $DB_USER
-            DB_PASSWORD: $DB_PASSWORD
-            DB_NAME: $DB_NAME
             PHP_FPM_USER: wodby
             PHP_FPM_GROUP: wodby
         volumes:
-            - ./src:/var/www/html:cached
+            - ./src:/var/www/html
         depends_on:
-            - mariadb_release
             - composer
-
-    mariadb_release:
-        image: wodby/mariadb:$MARIADB_TAG
-        container_name: "${PROJECT_NAME}_mariadb"
-        stop_grace_period: 30s
-        environment:
-            MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
-            MYSQL_DATABASE: $DB_NAME
-            MYSQL_USER: $DB_USER
-            MYSQL_PASSWORD: $DB_PASSWORD
-        volumes:
-            #- ./mariadb-init:/docker-entrypoint-initdb.d # Place init .sql file(s) here.
-            - ./mysql:/var/lib/mysql # I want to manage volumes manually.
+        networks:
+            - database
+            - web
 
     composer:
         container_name: "${PROJECT_NAME}_composer"
@@ -74,3 +60,9 @@ services:
         command: install
         volumes:
             - ./src:/app
+
+networks:
+    database:
+        name: database
+    web:
+        name: release_jandolejs_cz
