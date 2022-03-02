@@ -28,7 +28,7 @@ class Caches
         self::CACHE_LAYOUT       =>'layout\/',            // Layout
         self::CACHE_LATTE        =>'\.latte$',            // Latte templates
         self::CACHE_HTML         =>'\.(phtml|latte)$',    // HTML cache
-        self::CACHE_MERGED       =>'\.css$|\.js|\.less$', // less cache moved here
+        self::CACHE_MERGED       =>'\.css$|\.js$|\.less$', // less cache moved here
     ];
 
     public const CACHE_NAMES = [
