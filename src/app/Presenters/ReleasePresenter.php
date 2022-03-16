@@ -66,9 +66,6 @@ class ReleasePresenter extends Presenter
             $this->redirect('Release:new');
         }
 
-        // Make it possible to force creating release
-        if ($this->getParameter('force') === 'on') ReleaseFactory::$forceCreate = true;
-
         // Create release
         try {
             $id = $this->releaseFactory

@@ -348,10 +348,9 @@ class Release
                 if (!$task->isMergeable() && $task->getMergeableStatus() == 'dirty') $error .= " It probably have conflicts with " . Configuration::get('github/master') . " branch.";
                 if ($task->getMergeableStatus() == 'unknown') $error .= " Maybe checks are not confirmed. Wait and try again or check it [here]({$task->getPullLink()}/checks).";
 
-                $unapproved = ReleaseFactory::$forceCreate;
-                if (!$deploying && $unapproved && $task->isMergeable() && $task->getMergeableStatus() == 'blocked') {
+                // Let not approved tasks if creating release, but prevent creating PR
+                if (!$deploying && $task->isMergeable() && $task->getMergeableStatus() == 'blocked') {
                     $task->getRow()->update(['approve' => false]);
-                    return; // Checking for approve disableda
                 } else {
                     $errors[] = $error;
                 }

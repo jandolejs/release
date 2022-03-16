@@ -15,7 +15,6 @@ class ReleaseFactory extends DatabaseObject
     private array $releases = []; // cache for releases
     public static GitHub $gitHub;
     private User $user;
-    public static bool $forceCreate = false;
 
     public function __construct(Explorer $database, User $user)
     {

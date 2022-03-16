@@ -25,11 +25,6 @@
                 onclick="$('#new_release_modal').modal('hide'); prepareRelease({link "Release:create"});"
         >Create release</button>
 
-        <button class="btn btn-warning" id="button_prepare_release"
-                data-toggle="tooltip" data-placement="top" title="Force creating release (approve not required)"
-                onclick="$('#new_release_modal').modal('hide'); prepareRelease({link "Release:create"}, true);"
-        >!</button>
-
         <br><br>
         <table class="table">
             <thead><tr><th n:foreach="['#', 'Author', 'PR', 'PZ', 'Name', 'Labels', 'Actions'] as $item" scope="col">{$item|firstUpper}</th></tr></thead>

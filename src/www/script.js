@@ -58,7 +58,7 @@ function reloadPulls(link) {
     window.location.href = link;
 }
 
-function prepareRelease (link, force = false) {
+function prepareRelease (link) {
     let pulls = [];
 
     // Find selected pulls
@@ -88,9 +88,6 @@ function prepareRelease (link, force = false) {
             $(prepareForm).append('<input type="text" id="tags" name="pulls['+order+++']" value="'+pull+'"/>');
         }
     );
-
-    // Add force parameter
-    if (force) $(prepareForm).append('<input type="checkbox" checked="checked" name="force">');
 
     // Send form to prepare release
     reloading(true);
