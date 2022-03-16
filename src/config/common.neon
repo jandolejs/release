@@ -53,7 +53,8 @@ parameters:
 
 
 http:
-    proxy: 172.0.0.0/8
+    #proxy: 172.0.0.0/8
+    proxy: 192.168.224.0/20
 
 application:
     #catchExceptions: true
