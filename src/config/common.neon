@@ -53,8 +53,7 @@ parameters:
 
 
 http:
-    #proxy: 172.0.0.0/8
-    proxy: 192.168.224.0/20
+    proxy: 0.0.0.0/0 # Because IP can change on different environments
 
 application:
     #catchExceptions: true
