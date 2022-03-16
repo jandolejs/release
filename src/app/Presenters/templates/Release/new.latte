@@ -7,25 +7,26 @@
     <h1>Include pull requests to new release</h1>
 
     <div class="box">
-        <div class="btn-group">
-            <label for="manual_add_pull"></label>
-            <input type="text" class="form-control" id="manual_add_pull" placeholder="Pull #">
-            <button class="btn btn-primary" onclick="importToRelease($('#manual_add_pull').val());">
-                Manual&nbsp;add
-            </button><!-- >Manual add< -->
+
+        <div class="buttons">
+            <div class="btn-group">
+                <label for="manual_add_pull"></label>
+                <input type="text" class="form-control" id="manual_add_pull" placeholder="Pull #">
+                <button class="btn btn-primary" onclick="importToRelease();">Manually</button>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="importAllToRelease()">All</button>
+                <button class="btn btn-success" onclick="importReadyToRelease()">Ready</button>
+                <button class="btn btn-success" onclick="unselectAll()">None</button>
+            </div>
+
+            <button class="btn btn-success float-right" id="button_prepare_release" style="float: right"
+                    data-toggle="tooltip" data-placement="top" title="Merge tasks and prepare release for testing"
+                    onclick="prepareRelease();">Create</button>
         </div>
 
-        <div class="btn-group">
-            <button class="btn btn-success" onclick="importAllToRelease()">Add&nbsp;all</button><!-- >Add all< -->
-            <button class="btn btn-success" onclick="importReadyToRelease()">Add&nbsp;ready</button><!-- >Add ready< -->
-        </div>
-
-        <button class="btn btn-success" id="button_prepare_release"
-                data-toggle="tooltip" data-placement="top" title="Merge tasks and prepare release for testing"
-                onclick="$('#new_release_modal').modal('hide'); prepareRelease({link "Release:create"});"
-        >Create release</button>
-
-        <br><br>
+        <br>
         <table class="table">
             <thead><tr><th n:foreach="['#', 'Author', 'PR', 'PZ', 'Name', 'Labels', 'Actions'] as $item" scope="col">{$item|firstUpper}</th></tr></thead>
             <tbody id="pulls_list">
@@ -65,4 +66,108 @@
         </table>
     </div>
 
+{/block}
+
+{block script}
+    <script n:syntax="double">
+
+        function unselectAll() {
+            $("#pulls_list input").prop('checked', false);
+        }
+
+        function importAllToRelease() {
+            $("#pulls_list input.to_test").prop('checked', true);
+            importReadyToRelease(); // add ready
+        }
+
+        function importReadyToRelease() {
+            $("#pulls_list input.ready.to_test").prop('checked', true);
+        }
+
+        function prepareRelease () {
+            let pulls = [];
+
+            // Find selected pulls
+            $("#pulls_list input")
+                .filter(function() {
+                    if (this.checked) pulls.push(this.value);
+                });
+
+            // Check if any pull was selected
+            if (pulls.length < 1) {
+                alert("No pulls selected");
+                return false;
+            }
+
+            // Prepare form
+            let releaseFormId = 'prepare_release_form';
+            let prepareForm = document.createElement("form");
+            prepareForm.id = releaseFormId;
+            prepareForm.action = {{link "Release:create"}};
+            prepareForm.method = 'GET';
+            document.body.appendChild(prepareForm);
+
+            // Add pulls as inputs to form
+            let order = 1;
+            pulls.forEach(
+                function (pull) {
+                    $(prepareForm).append('<input type="text" id="tags" name="pulls['+order+++']" value="'+pull+'"/>');
+                }
+            );
+
+            // Send form to prepare release
+            reloading(true);
+            prepareForm.submit();
+            console.log(prepareForm);
+            document.body.removeChild(prepareForm);
+        }
+
+        function importToRelease() {
+            let text = $('#manual_add_pull').val();
+            let pull;
+
+            // get pull number from text
+            if (text) {
+                pull = text.match(/pull\/(\d+)/);
+                if (pull) {
+                    pull = pull[1];
+                } else {
+                    pull = text.match(/#(\d+)/);
+                    if (pull) {
+                        pull = pull[1];
+                    } else {
+                        pull = text.match(/(\d+)/);
+                        if (pull) {
+                            pull = pull[1];
+                            console.log(pull);
+                        }
+                    }
+                }
+            }
+
+            if (!pull){
+                alert('Pull importing problem: could not parse pull number');
+                return;
+            }
+
+            let html = "<tr><td></td><td></td><td>#"+pull+"</td><td></td><td>Manually added</td><td></td><td>\n" +
+                "    <label class=\"btn btn-secondary\">\n" +
+                "        <input id=\"import_button_manual_" + pull + "\"" +
+                "               type=\"checkbox\" autocomplete=\"off\" value=\"" + pull + "\"\n" +
+                "        >Add&nbsp;to&nbsp;release<!-- Add to release --></label>\n" +
+                "</td></tr>";
+
+            $('#pulls_list').append(html);
+            $('#import_button_manual_' + pull).prop('checked', true)
+            $('#manual_add_pull').val('');
+        }
+
+        $(function() { // input on enter
+            $('#manual_add_pull').keypress(function (e) {
+                if (e.which === 13) {
+                    importToRelease();
+                }
+            });
+        })
+    </script>
 {/block}

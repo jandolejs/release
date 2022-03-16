@@ -12,14 +12,14 @@
 
     {if $release->hasTasks()}
         <div class="box">
-            <h2 onclick="$(this).next().toggle(400);">Tasks inside release</h2>
+            <h2>Tasks inside release</h2>
             {include tasksTable}
         </div>
     {/if}
 
     <div class="box">
-        <h3 onclick="$(this).next().toggle(400);">Caches to be flushed <a n:href="Tools:caches, release: $release->getId()">↗️</a></h3>
-        <div style="display: none">{foreach $release->getCaches() as $key => $cache}
+        <h3>Caches to be flushed <a n:href="Tools:caches, release: $release->getId()">↗️</a></h3>
+        <div>{foreach $release->getCaches() as $key => $cache}
             {var $color = in_array($key, App\Model\Git\Caches::CACHE_DANGEROUS) ? "red" : "lightseagreen"}
             <span class="badge badge-danger" style="background-color: {$color}">{$cache}</span>
         {/foreach}</div>
@@ -67,7 +67,7 @@
 {define taskBody}
     {varType App\Model\Task $task}
 
-    <tr>
+    <tr data-task-id="{$task->getId()}">
         <td>{if isset($iterator)}{$iterator->counter}.{else}-{/if}</td>
 
         <!-- Status -->
@@ -124,8 +124,32 @@
 
         <!-- Note -->
         <td>
-            <label><input onchange="updateNote({link Task:updateNote, id: $task->getId()}, this)"
-                          value="{$task->getNote()}" class="form-control"></label>
+            <label><input onchange="updateNote(this)" value="{$task->getNote()}" class="form-control"></label>
         </td>
     </tr>
 {/define}
+
+{block script}
+    <script n:syntax="double">
+
+        function updateNote(el) {
+            el = $(el);
+
+            $.ajax({
+                type: 'POST', url: {{link Task:updateNote}},
+                data: {
+                    'note': el.val(),
+                    'task': $(el.closest('tr')[0]).data('taskId'),
+                },
+                beforeSend: function() {el.css('background-color', "lightyellow")},
+                success: function () {
+                    el.css('background-color', "lightgreen");
+                    setTimeout(function () {
+                        el.css('background-color', "white")
+                    }, 1200);
+                },
+                error: function () {el.css('background-color', "red")}
+            });
+        }
+    </script>
+{/block}

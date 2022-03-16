@@ -80,9 +80,10 @@ class TaskPresenter extends Presenter
      * @throws \Nette\Application\AbortException
      * @noinspection PhpUnused
      */
-    #[NoReturn] public function actionUpdateNote(int $id): void
+    #[NoReturn] public function actionUpdateNote(): void
     {
         $this->permit('task', 'note');
+        $id = (int) $this->getParameter('task');
 
         try {
             $task = $this->taskFactory->loadById($id);

@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
     nginx:
-        image: wodby/nginx:$NGINX_TAG
+        image: wodby/nginx
         container_name: "${PROJECT_NAME}_nginx"
         depends_on:
             - php
@@ -30,7 +30,7 @@ services:
             - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.permanent=true"
 
     php:
-        image: wodby/php:$PHP_TAG
+        image: wodby/php:8.0-dev
         container_name: "${PROJECT_NAME}_php"
         environment:
             PHP_FPM_CLEAR_ENV: 'no'
