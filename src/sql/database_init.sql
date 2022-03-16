@@ -7,9 +7,9 @@ SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 SET NAMES utf8mb4;
 
-DROP DATABASE IF EXISTS `devstats`;
-CREATE DATABASE `devstats` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `devstats`;
+-- DROP DATABASE IF EXISTS `release`;
+CREATE DATABASE `release` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `release`;
 
 CREATE TABLE `releases` (
     `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
