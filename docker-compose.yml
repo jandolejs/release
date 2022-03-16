@@ -30,7 +30,7 @@ services:
             - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.permanent=true"
 
     php:
-        image: wodby/php:8.0-dev
+        image: wodby/php:8
         container_name: "${PROJECT_NAME}_php"
         environment:
             PHP_FPM_CLEAR_ENV: 'no'
