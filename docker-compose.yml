@@ -54,5 +54,7 @@ services:
 networks:
     database:
         name: database
+        external: true
     web:
         name: release_jandolejs_cz
+        external: true
