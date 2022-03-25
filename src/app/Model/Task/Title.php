@@ -25,6 +25,15 @@ class Title
         $regex = "~.*" . $prefix . "\s?(?:-|\/|\:|\s)\s?(\d+)[a-zA-Z]?(?:\s|:|\/|\||_|\d|-)*(.*)" . "~i";
         preg_match($regex, $title, $matched);
 
+        // Prevent not found case
+        if (empty($matched)) {
+            $matched = [
+                0 => $title,
+                1 => 0,
+                2 => $title,
+            ];
+        }
+
         $this->code  = $matched[1];
         $this->name  = $matched[2];
 
