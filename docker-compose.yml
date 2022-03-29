@@ -18,16 +18,27 @@ services:
         networks:
             - web
         labels:
+            # Enable Traefik
             - "traefik.enable=true"
+
+            # Auth
+            - "traefik.http.middlewares.${PROJECT_NAME}_auth.basicauth.users=ateli:$$2a$$12$$YvsJ83ZBDfqlHUAsfEt9AuefZwiW1NDyGcXDIirP/JevgkvTSu/Qy"
+            - "traefik.http.routers.${PROJECT_NAME}_https.middlewares=${PROJECT_NAME}_auth"
+
+            # Web
             - "traefik.http.routers.${PROJECT_NAME}_http.entrypoints=web"
             - "traefik.http.routers.${PROJECT_NAME}_http.rule=Host(`${PROJECT_BASE_URL}`)"
-            - "traefik.http.routers.${PROJECT_NAME}_http.middlewares=${PROJECT_NAME}_https_redirect"
+
+            # HTTPS
             - "traefik.http.routers.${PROJECT_NAME}_https.entrypoints=websecure"
             - "traefik.http.routers.${PROJECT_NAME}_https.rule=Host(`${PROJECT_BASE_URL}`)"
+
+            - "traefik.http.routers.${PROJECT_NAME}_http.middlewares=${PROJECT_NAME}_https_redirect"
+            - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.permanent=true"
+            - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.scheme=https"
+
             - "traefik.http.routers.${PROJECT_NAME}_https.tls=true"
             - "traefik.http.routers.${PROJECT_NAME}_https.tls.certresolver=myresolver"
-            - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.scheme=https"
-            - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.permanent=true"
 
     php:
         image: wodby/php:8
