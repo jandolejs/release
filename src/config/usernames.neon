@@ -3,16 +3,16 @@ parameters:
     configuration:
         github:
             usernames:
-                jandolejs1999: Dolejš
-                LukasCesal: Lukáš Č.
-                Sekiphp: Luboš
-                dominikapudilova: Pudilová
-                Hudcova: Hudcová
-                PeeTee12: Tobiáš
-                petrsvamberg: Švamberg
-                robertorichi74: Robert
-                Souty1997: Soutor
-                abdel-aouby: Abdel
-                FreeWall: Michal V.
-                J-Kostecka: Kostečka
-                Dependabot[bot]: Dependa
+                "jandolejs1999": Dolejš
+                "LukasCesal": Lukáš Č.
+                "Sekiphp": Luboš
+                "dominikapudilova": Pudilová
+                "Hudcova": Hudcová
+                "PeeTee12": Tobiáš
+                "petrsvamberg": Švamberg
+                "robertorichi74": Robert
+                "Souty1997": Soutor
+                "abdel-aouby": Abdel
+                "FreeWall": Michal V.
+                "J-Kostecka": Kostečka
+                "Dependabot[bot]": Dependa
