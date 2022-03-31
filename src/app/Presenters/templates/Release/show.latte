@@ -115,7 +115,7 @@
 
         <!-- Labels -->
         <td>
-            {if !$task->hasApprove()}<span class="badge badge-pill" style="padding: 6px; background-color: red" data-toggle="tooltip" data-placement="top" title="This PR does not have approve">! NOT APPROVED</span>{/if}
+            {if !$task->hasApprove()}<span class="badge badge-pill" style="padding: 6px; background-color: red" data-toggle="tooltip" data-placement="top" title="This PR does not have approve">! NOT MERGEABLE</span>{/if}
 
             <span n:foreach="$task->getLabels() as $label" class="badge badge-pill" style="padding: 6px; background-color: #{$label['color']}"
                   {if isset($label['description'])}data-toggle="tooltip" data-placement="top" title="{$label['description']}"{/if}

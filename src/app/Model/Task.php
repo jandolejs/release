@@ -214,7 +214,7 @@ class Task
      */
     public function hasApprove(): bool
     {
-        return (bool) $this->getRow()->offsetGet('approve');
+        return (bool) $this->getRow()->offsetGet('approve') && $this->isMergeable();
     }
 
     public function getLabels($short = false): array
