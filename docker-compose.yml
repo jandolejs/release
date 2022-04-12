@@ -5,6 +5,7 @@ services:
     nginx:
         image: wodby/nginx
         container_name: "${PROJECT_NAME}_nginx"
+        restart: always
         depends_on:
             - php
         environment:
@@ -43,6 +44,7 @@ services:
     php:
         image: wodby/php:8
         container_name: "${PROJECT_NAME}_php"
+        restart: always
         environment:
             PHP_FPM_CLEAR_ENV: 'no'
             PHP_FPM_USER: wodby
