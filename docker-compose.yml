@@ -79,6 +79,6 @@ services:
 
 networks:
     database:
-        name: database
+        name: database_release
     web:
         name: release_jandolejs_cz
