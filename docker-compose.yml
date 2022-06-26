@@ -66,6 +66,19 @@ services:
         volumes:
             - ./src:/app
 
+    adminer:
+        image: adminer
+        container_name: "${PROJECT_NAME}_adminer"
+        environment:
+            ADMINER_DEFAULT_SERVER: database
+        ports:
+            - "8085:8080"
+        networks:
+            - database
+        restart: always
+        depends_on:
+            - database
+
     database:
         image: wodby/mariadb
         container_name: "${PROJECT_NAME}_mariadb"
