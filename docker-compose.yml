@@ -54,6 +54,7 @@ services:
             - ./src:/var/www/html
         depends_on:
             - composer
+            - database
         networks:
             - database
             - web
