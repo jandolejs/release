@@ -38,6 +38,7 @@ services:
             - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.permanent=true"
             - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.scheme=https"
 
+            # TLS Certificates
             - "traefik.http.routers.${PROJECT_NAME}_https.tls=true"
             - "traefik.http.routers.${PROJECT_NAME}_https.tls.certresolver=myresolver"
 
@@ -63,6 +64,19 @@ services:
         command: install
         volumes:
             - ./src:/app
+
+    database:
+        image: wodby/mariadb
+        container_name: "${PROJECT_NAME}_mariadb"
+        environment:
+            MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+        restart: always
+        volumes:
+            - ./mysql:/var/lib/mysql
+            - ./src/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+        networks:
+            - database
+            - adminer
 
 networks:
     database:

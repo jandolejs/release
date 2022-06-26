@@ -9,4 +9,4 @@
 - copy src/config/local.sample.neon to src/config/local.neon
 - edit src/config/local.neon as you want
 - docker-compose up -d
-- wait for database, login and init database with src/sql/database_init.sql
+- wait for database, login and init database with src/sql/init.sql
