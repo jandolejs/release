@@ -76,7 +76,6 @@ services:
             - ./src/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
         networks:
             - database
-            - adminer
 
 networks:
     database:
