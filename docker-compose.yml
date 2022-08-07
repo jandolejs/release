@@ -21,10 +21,7 @@ services:
         labels:
             # Enable Traefik
             - "traefik.enable=true"
-
-            # Auth
-            - "traefik.http.middlewares.${PROJECT_NAME}_auth.basicauth.users=ateli:$$2a$$12$$YvsJ83ZBDfqlHUAsfEt9AuefZwiW1NDyGcXDIirP/JevgkvTSu/Qy"
-            - "traefik.http.routers.${PROJECT_NAME}_https.middlewares=${PROJECT_NAME}_auth"
+            - "traefik.http.routers.${PROJECT_NAME}_https.middlewares=aiti_auth@file"
 
             # Web
             - "traefik.http.routers.${PROJECT_NAME}_http.entrypoints=web"
