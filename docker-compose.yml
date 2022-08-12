@@ -19,23 +19,18 @@ services:
         networks:
             - web
         labels:
-            # Enable Traefik
+            # Route Traefik
             - "traefik.enable=true"
             - "traefik.http.routers.${PROJECT_NAME}_https.middlewares=aiti_auth@file"
-
-            # Web
             - "traefik.http.routers.${PROJECT_NAME}_http.entrypoints=web"
             - "traefik.http.routers.${PROJECT_NAME}_http.rule=Host(`${PROJECT_BASE_URL}`)"
 
-            # HTTPS
+            # HTTPS redirect + resolver
             - "traefik.http.routers.${PROJECT_NAME}_https.entrypoints=websecure"
             - "traefik.http.routers.${PROJECT_NAME}_https.rule=Host(`${PROJECT_BASE_URL}`)"
-
             - "traefik.http.routers.${PROJECT_NAME}_http.middlewares=${PROJECT_NAME}_https_redirect"
             - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.permanent=true"
             - "traefik.http.middlewares.${PROJECT_NAME}_https_redirect.redirectscheme.scheme=https"
-
-            # TLS Certificates
             - "traefik.http.routers.${PROJECT_NAME}_https.tls=true"
             - "traefik.http.routers.${PROJECT_NAME}_https.tls.certresolver=myresolver"
 
@@ -68,13 +63,17 @@ services:
         container_name: "${PROJECT_NAME}_adminer"
         environment:
             ADMINER_DEFAULT_SERVER: database
-        ports:
-            - "8085:8080"
         networks:
             - database
+            - web
         restart: always
         depends_on:
             - database
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.${PROJECT_NAME}_adminer.middlewares=aiti_auth@file"
+            - "traefik.http.routers.${PROJECT_NAME}_adminer.entrypoints=web"
+            - "traefik.http.routers.${PROJECT_NAME}_adminer.rule=Host(`adminer.${PROJECT_BASE_URL}`)"
 
     database:
         image: wodby/mariadb
