@@ -48,8 +48,8 @@ services:
             - composer
             - database
         networks:
-            - database
             - web
+            - database
 
     composer:
         container_name: "${PROJECT_NAME}_composer"
@@ -91,4 +91,4 @@ networks:
     database:
         name: database_release
     web:
-        name: release_jandolejs_cz
+        name: www
