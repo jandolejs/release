@@ -16,20 +16,28 @@ class MyAuthorizer implements Authorizator
     const PERMISSIONS = [
         'user' => [
             'release' => [
-                'show', 'create', 'fail',
+                'show', 'create', 'list'
             ],
             'github'  => [
                 'pulls'
             ],
-            'task'    => [
-                'approve', 'fail', 'import',
+            'task' => [
+                'show', 'note'
+            ],
+        ],
+        'power_user' => [
+            'release' => [
+                'deploy', 'fail'
+            ],
+            'task' => [
+                'approve', 'fail', 'import'
             ],
         ],
     ];
 
     public function isAllowed($role, $resource, $privilege): bool
     {
-        if ($role === 'admin') return TRUE;
+        //if ($role === 'admin') return TRUE;
 
         if (isset(self::PERMISSIONS[$role])) {
             if (isset(self::PERMISSIONS[$role][$resource])) {

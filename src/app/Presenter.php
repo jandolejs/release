@@ -47,7 +47,7 @@ class Presenter extends Nette\Application\UI\Presenter
     {
         if (!$this->getUser()->isAllowed($resource, $privilege)) {
             $this->flashMessage(
-                "You dont have permissions for this ($resource->" . (!empty($privilege) ? $privilege : $resource) . ")",
+                "You dont have permissions for this ($resource->" . ($privilege ?: '[/]') . ")",
                 "warning");
             $this->redirect("Homepage:");
         }
