@@ -32,6 +32,9 @@ class MyAuthorizer implements Authorizator
             'task' => [
                 'approve', 'fail', 'import'
             ],
+            'github' => [
+                'createPull',
+            ],
         ],
     ];
 
