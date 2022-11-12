@@ -9,6 +9,7 @@ parameters:
     google_client_id:
     google_secret_key:
     jira_company_name:
+    buddy_deploy_token:
 
     # Jira - links, etc, ...
     jira_url: https://%jira_company_name%.atlassian.net
@@ -40,6 +41,8 @@ parameters:
             branch:
                 prefix: release
             table: releases
+            deploy:
+                token: %buddy_deploy_token%
 
         task:
             prefix: %jira_prefix%

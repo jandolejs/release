@@ -8,6 +8,7 @@ use App\Exceptions\ReleasePrepareException;
 use App\Model\Git\Branch;
 use App\Model\Git\Caches;
 use App\Model\Git\GitHub;
+use App\Presenter;
 use App\PullFactory;
 use App\ReleaseFactory;
 use App\TaskFactory;
@@ -192,6 +193,17 @@ class Release
     }
 
     public function getId(): int { return $this->id; }
+
+    public function getDeployLink()
+    {
+        $url = 'https://app.buddy.works/goodform/goodform/pipelines/pipeline/418005/trigger-webhook';
+        $data = [
+            'token' => Configuration::get("release/deploy/token"),
+            'branch' => $this->getBranchName(),
+        ];
+
+        return $url . '?' . http_build_query($data);
+    }
 
     /**
      * Delete branch, tasks, ... in this release

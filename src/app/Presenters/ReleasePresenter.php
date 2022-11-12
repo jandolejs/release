@@ -12,6 +12,7 @@ use App\Presenter;
 use App\ReleaseFactory;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
+use Nette\Application\AbortException;
 use Nette\DI\Attributes\Inject;
 use Throwable;
 use Tracy\Debugger;
@@ -28,7 +29,7 @@ class ReleasePresenter extends Presenter
 
     /**
      * Check user before accessing
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      */
     public function startup()
     {
@@ -53,7 +54,7 @@ class ReleasePresenter extends Presenter
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @noinspection PhpUnused
      */
     #[NoReturn] public function actionCreate(array $pulls): void
@@ -92,7 +93,7 @@ class ReleasePresenter extends Presenter
 
     /**
      * @param int $id
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @noinspection PhpUnused
      */
     #[NoReturn] public function actionFail(int $id): void
@@ -114,7 +115,7 @@ class ReleasePresenter extends Presenter
 
     /**
      * @param int $id
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @noinspection PhpUnused
      */
     #[NoReturn] public function actionCreatePull(int $id): void
@@ -139,7 +140,7 @@ class ReleasePresenter extends Presenter
 
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @noinspection PhpUnused
      */
     #[NoReturn] public function renderDefault(): void
@@ -172,7 +173,7 @@ class ReleasePresenter extends Presenter
 
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @noinspection PhpUnused
      */
     #[NoReturn] public function renderDeployed(): void
@@ -196,7 +197,7 @@ class ReleasePresenter extends Presenter
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @noinspection PhpUnused
      */
     public function renderNew()
@@ -212,12 +213,12 @@ class ReleasePresenter extends Presenter
     }
 
     /**
-     * @throws \Nette\Application\AbortException
+     * @throws AbortException
      * @noinspection PhpUnused
      */
     #[NoReturn] public function renderShow(int $id): void
     {
-        $this->permit('release', 'show');
+        $this->permit('release', 'list');
 
         try {
             $release = $this->releaseFactory->load($id);
@@ -227,5 +228,24 @@ class ReleasePresenter extends Presenter
         }
 
         $this->template->release = $release;
+        $this->template->user = $this->getUser();
+    }
+
+    /**
+     * @throws AbortException
+     * @noinspection PhpUnused
+     */
+    #[NoReturn] public function deployShow(int $id): void
+    {
+        $this->permit('release', 'deploy');
+
+        try {
+            $release = $this->releaseFactory->load($id);
+            $this->flashMessage('done', 'success');
+        } catch (Exception $e) {
+            $this->flashMessage($e->getMessage(), 'danger');
+        }
+
+        $this->redirect("Release:show", $id);
     }
 }

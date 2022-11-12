@@ -31,9 +31,9 @@ class Presenter extends Nette\Application\UI\Presenter
         parent::startup();
 
         // Check internet connection
-        $connected = @fsockopen("google.com", 80);
-        if (!$connected) $this->flashMessage("Internet connection is missing!", "danger");
-        else fclose($connected);
+        #$connected = @fsockopen("google.com", 80);
+        #if (!$connected) $this->flashMessage("Internet connection is missing!", "danger");
+        #else fclose($connected);
 
         $this->statistics->visit($this->getHttpRequest()->getUrl()->getPath(), 'visit');
     }
@@ -47,7 +47,7 @@ class Presenter extends Nette\Application\UI\Presenter
     {
         if (!$this->getUser()->isAllowed($resource, $privilege)) {
             $this->flashMessage(
-                "You dont have permissions for this ($resource->" . (!empty($privilege) ? $privilege : $resource) . ")",
+                "You dont have permissions for this ($resource->" . ($privilege ?: '[/]') . ")",
                 "warning");
             $this->redirect("Homepage:");
         }
