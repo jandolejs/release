@@ -51,9 +51,9 @@
     {/if}
 
     {if $user->isAllowed('release', 'deploy')}
-        <a class="btn btn-lg btn-warning" title="Completely fail release" data-toggle="tooltip" data-placement="top"
+        <a class="btn btn-lg btn-warning" title="Deploy to stage server" data-toggle="tooltip" data-placement="top"
            onclick="return confirm('Really?')" href="{$release->getDeployLink()}"
-        >Deploy</a>
+        >To Stage</a>
     {/if}
 
 {/block}
