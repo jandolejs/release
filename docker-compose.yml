@@ -23,11 +23,11 @@ services:
             - "traefik.enable=true"
 
             # Route HTTP Web
-            - "traefik.http.routers.${PROJECT_NAME}_http.rule=Host(`www.${PROJECT_BASE_URL}`, `${PROJECT_BASE_URL}`)"
+            - "traefik.http.routers.${PROJECT_NAME}_http.rule=Host(`www.${PROJECT_BASE_URL}`) || Host(`${PROJECT_BASE_URL}`)"
             - "traefik.http.routers.${PROJECT_NAME}_http.entrypoints=web"
 
             # Route HTTPS Web
-            - "traefik.http.routers.${PROJECT_NAME}_https.rule=Host(`www.${PROJECT_BASE_URL}`, `${PROJECT_BASE_URL}`)"
+            - "traefik.http.routers.${PROJECT_NAME}_https.rule=Host(`www.${PROJECT_BASE_URL}`) || Host(`${PROJECT_BASE_URL}`)"
             - "traefik.http.routers.${PROJECT_NAME}_https.entrypoints=websecure"
 
             # Redirect HTTP to HTTPS
