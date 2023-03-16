@@ -3,7 +3,11 @@
       "platform": {
         "php": "8.0.0",
         "ext-something": "8.0.0"
-      }
+      },
+        "allow-plugins": {
+            "symfony/thanks": true,
+            "php-http/discovery": true
+        }
     },
 	"name": "nette/web-project",
 	"description": "Nette: Standard Web Project",
@@ -31,7 +35,9 @@
       "ext-mbstring": "*",
       "ext-dom": "*",
       "marufmax/emoticon-php": "*",
-      "knplabs/github-api": "*"
+      "knplabs/github-api": "*",
+        "symfony/http-client": "^5.4",
+        "nyholm/psr7": "^1.5"
     },
 	"require-dev": {
 		"nette/tester": "^2.3",
