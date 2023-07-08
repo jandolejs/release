@@ -104,5 +104,6 @@ services:
 networks:
     web:
         name: www_release
+        external: true
     database:
         name: database_release
