@@ -51,10 +51,8 @@ services:
             - ./src:/var/www/html
         depends_on:
             - composer
-            - database
         networks:
             - web
-            - database
 
     composer:
         container_name: "${PROJECT_NAME}_composer"
@@ -63,47 +61,8 @@ services:
         volumes:
             - ./src:/app
 
-    adminer:
-        image: dockette/adminer
-        container_name: "${PROJECT_NAME}_adminer"
-        environment:
-            ADMINER_DEFAULT_SERVER: database
-        networks:
-            - web
-            - database
-        restart: always
-        depends_on:
-            - database
-        labels:
-            # Enable Traefik
-            - "traefik.enable=true"
-            - "traefik.docker.network=www_release"
-
-            # Route http Adminer requests
-            - "traefik.http.routers.${PROJECT_NAME}_adminer.middlewares=personal_auth@file"
-            - "traefik.http.routers.${PROJECT_NAME}_adminer.entrypoints=web"
-            - "traefik.http.routers.${PROJECT_NAME}_adminer.rule=Host(`adminer.${PROJECT_BASE_URL}`)"
-
-            # Route https Adminer requests
-            - "traefik.http.routers.${PROJECT_NAME}_adminers.rule=Host(`adminer.${PROJECT_BASE_URL}`)"
-            - "traefik.http.routers.${PROJECT_NAME}_adminers.entrypoints=websecure"
-            - "traefik.http.routers.${PROJECT_NAME}_adminers.tls=true"
-
-    database:
-        image: wodby/mariadb
-        container_name: "${PROJECT_NAME}_mariadb"
-        environment:
-            MYSQL_ROOT_PASSWORD: $DB_PASSWORD
-        restart: always
-        volumes:
-            - ./mysql:/var/lib/mysql
-            - ./src/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
-        networks:
-            - database
 
 networks:
     web:
         name: www_release
         external: true
-    database:
-        name: database_release

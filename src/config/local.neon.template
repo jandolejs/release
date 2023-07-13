@@ -1,17 +1,18 @@
-
 parameters:
 
-    jira_prefix: ABC
-    jira_company_name: company_name
+    jira_prefix: GF
+    jira_company_name: goodform
 
-    github_token: ghp_abc123
-    github_company: githubcompany
-    github_repository: repository
+    github_token: *****
+    github_company: goodform-aiti
+    github_repository: goodform
 
     google_client_id: 11111111111-1a2b3c.apps.googleusercontent.com
     google_secret_key: Abcdefg123
 
+    buddy_deploy_token: 482ea13e
+
 database:
-    dsn: 'mysql:host=database;dbname=release'
-    user: root
-    password: root
+    dsn: 'mysql:host=10.0.0.145;dbname=release'
+    user: release
+    password: rybnice
