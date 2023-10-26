@@ -20,9 +20,9 @@ services:
             - web
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.${PROJECT_NAME}_http.tls=true"
-            - "traefik.http.routers.${PROJECT_NAME}_http.rule=Host(`www.${PROJECT_BASE_URL}`) || Host(`${PROJECT_BASE_URL}`)"
-            - "traefik.http.routers.${PROJECT_NAME}_http.entrypoints=web,websecure"
+            - "traefik.http.routers.${PROJECT_NAME}.tls=true"
+            - "traefik.http.routers.${PROJECT_NAME}.rule=Host(`www.${PROJECT_BASE_URL}`) || Host(`${PROJECT_BASE_URL}`)"
+            - "traefik.http.routers.${PROJECT_NAME}.entrypoints=websecure"
 
     php:
         image: wodby/php:8
