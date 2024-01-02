@@ -2,13 +2,13 @@
 parameters:
 
     # from local.neon, edit there, not here, sample is in local.sample.neon
-    jira_prefix:
+    jira_prefix: GF
+    jira_company_name: goodform
     github_token:
     github_company:
     github_repository:
     google_client_id:
     google_secret_key:
-    jira_company_name:
     buddy_deploy_token:
 
     # Jira - links, etc, ...
