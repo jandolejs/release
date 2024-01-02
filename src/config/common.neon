@@ -4,12 +4,12 @@ parameters:
     # from local.neon, edit there, not here, sample is in local.sample.neon
     jira_prefix: GF
     jira_company_name: goodform
-    github_token:
-    github_company:
-    github_repository:
-    google_client_id:
-    google_secret_key:
-    buddy_deploy_token:
+    github_token: ::getenv('github_token')
+    github_company: ::getenv('github_company')
+    github_repository: ::getenv('github_repository')
+    google_client_id: ::getenv('google_client_id')
+    google_secret_key: ::getenv('google_secret_key')
+    buddy_deploy_token: ::getenv('buddy_deploy_token')
 
     # Jira - links, etc, ...
     jira_url: https://%jira_company_name%.atlassian.net
@@ -64,6 +64,11 @@ application:
     mapping:
         *: App\*Module\Presenters\*Presenter
 
+
+database:
+    dsn: ::getenv('dsn')
+    user: ::getenv('user')
+    password: ::getenv('password')
 
 session:
     expiration: 14 days
