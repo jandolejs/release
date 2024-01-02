@@ -11,7 +11,7 @@ services:
         environment:
             NGINX_STATIC_OPEN_FILE_CACHE: "off"
             NGINX_ERROR_LOG_LEVEL: debug
-            NGINX_BACKEND_HOST: php
+            NGINX_BACKEND_HOST: ${PROJECT_NAME}_php
             NGINX_VHOST_PRESET: php
             NGINX_SERVER_ROOT: /var/www/html/www
         volumes:
@@ -48,5 +48,5 @@ services:
 
 networks:
     web:
-        name: www_release
+        name: www
         external: true
